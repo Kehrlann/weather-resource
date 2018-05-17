@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+# Move into the out dir
+cd "${1}"
+
+# Make fd 3 available as STDOUT, for response
+exec 3>&1
+# Make stdin > stdout, so that echo logs stuff
+exec 1>&2
+
+# TODO: what is this ?
+set +x
+
+# for jq
+PATH=/usr/local/bin:$PATH
+
+# Where to put the results
+payload=$(mktemp /tmp/resource-in.XXXXXX)
+
+# Read the source &  version from STDIN
+cat > "${payload}" <&0
+
+# Read URL from source, otherwise use default url
+DEFAULT_WEATHER_URL="TODO - put real URL"
+URL=$DEFAULT_WEATHER_URL
+# TODO: read uurl from source + insecure
+#URL="$(jq -r '.source.url // "$DEFAULT_WEATHER_URL"' < "${payload}")"
+# TODO: city
+# TODO: query
+# TODO: lat/lon ?
+
