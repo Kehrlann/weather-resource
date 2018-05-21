@@ -1,6 +1,8 @@
 import json
-from typing import Type
+from typing import Union
 
+class EmptyVersion:
+    pass
 
 class Version:
     weather: str = ""
@@ -11,9 +13,9 @@ class Version:
         self.date = date
 
     @staticmethod
-    def fromJson(raw_data: str) -> 'Version':
+    def fromJson(raw_data: str) -> Union['Version', EmptyVersion]:
         if not raw_data:
-            return Version()
+            return EmptyVersion()
 
         data = json.loads(raw_data)
         weather = data.get('weather') or Version.weather
