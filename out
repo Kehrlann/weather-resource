@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-
-exec 1>&2   # redirect stdin to stderr, for logging
-
-echo "Nothing to do here..."
