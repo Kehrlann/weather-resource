@@ -6,7 +6,7 @@ class Version:
     weather: str = ""
     date: str = ""
 
-    def __init__(self, weather: str = "", date: str = "") -> None:
+    def __init__(self, weather: str, date: str) -> None:
         self.weather = weather
         self.date = date
 
