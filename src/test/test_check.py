@@ -3,28 +3,44 @@ from unittest.mock import patch
 from datetime import datetime
 import json
 from weather.check import check
-
+from weather.models import Version
 
 class TestCheck(unittest.TestCase):
+
+    def setUp(self):
+        self.created_time = '2018-05-21T16:26:37Z'
+        self.response_sunny = FakeResponse.from_weather_and_date(
+            "sunny",
+            self.created_time
+        )
+
     def test_gets_data_from_request(self):
         with patch('requests.get') as mock_request:
-            created_time = '2018-05-21T16:26:37Z'
+            mock_request.return_value = self.response_sunny
 
-            mock_request.return_value = FakeResponse.fromWeatherAndDate(
-                "sunny",
-                created_time
-            )
-
-            version = check()
+            version = check()[0]
             self.assertEqual(version.weather, "sunny")
-            self.assertEqual(version.date, created_time)
+            self.assertEqual(version.date, self.created_time)
 
     def test_contacts_yahoo(self):
         with patch('requests.get') as mock_request:
             check()
-            mock_request.assert_called_once()
             url = mock_request.call_args[0]
             self.assertIn("https://query.yahooapis.com/v1/public/yql?q=", url)
+
+    def test_produces_new_version_on_weather_change(self):
+        with patch('requests.get') as mock_request:
+            mock_request.return_value = self.response_sunny
+
+            versions = check(previous_version=Version("cloudy", ""))
+            self.assertGreaterEqual(len(versions), 1)
+
+    def test_no_new_version_on_same_weather(self):
+        with patch('requests.get') as mock_request:
+            mock_request.return_value = self.response_sunny
+
+            versions = check(previous_version=Version("sunny", ""))
+            self.assertTrue( len(versions) == 0)
 
 
 class FakeResponse:
@@ -35,7 +51,7 @@ class FakeResponse:
         self.content = content
 
     @staticmethod
-    def fromWeatherAndDate(weather: str, date: str = "") -> 'FakeResponse':
+    def from_weather_and_date(weather: str, date: str = "") -> 'FakeResponse':
         return FakeResponse(
             '{ "item": { "condition" : "%s" }, "created": "%s" }'
             % (weather,
