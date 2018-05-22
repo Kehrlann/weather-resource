@@ -2,3 +2,4 @@
 [ ] source flag for check ("on new weather" vs "on new forecast")
 [ ] smoke tests on check (or refactor "main")
 [ ] use yahoo attribution guidelines (https://developer.yahoo.com/attribution/)
+[ ] add metadata on check/in to display on resource page
