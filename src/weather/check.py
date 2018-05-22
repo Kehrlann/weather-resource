@@ -19,4 +19,5 @@ def run_check(source: Source, previous_version: TVersion = EmptyVersion()) -> Li
 if __name__ == "__main__":
     source, version = load_source_version(sys.stdin.read())
     new_versions = run_check(source, version)
-    print(json.dumps([v.to_dict() for v in new_versions]))
+    versions_dict = [v.to_dict() for v in new_versions]
+    print(json.dumps(versions_dict))
