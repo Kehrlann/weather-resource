@@ -15,6 +15,13 @@ class TestVersion(unittest.TestCase):
         version = Version.from_json({})
         self.assertIsInstance(version, EmptyVersion)
 
+    def test_serializes_to_json(self):
+        version = Version("storm", "2018-05-21T16:26:37Z")
+        self.assertEqual(
+            version.to_dict(),
+            { "weather": "storm", "date": "2018-05-21T16:26:37Z" }
+        )
+
 
 class TestSource(unittest.TestCase):
     def test_loads_city(self):

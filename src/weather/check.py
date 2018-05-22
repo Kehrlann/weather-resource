@@ -23,4 +23,5 @@ def check(source: Source, previous_version: TVersion = EmptyVersion()) -> List[V
 
 if __name__ == "__main__":
     source, version = load_source_version(sys.stdin.read())
-    check(source, version)
+    new_versions = check(source, version)
+    print(json.dumps([v.to_dict() for v in new_versions]))

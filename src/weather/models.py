@@ -22,6 +22,9 @@ class Version:
         date = data.get('date') or Version.date
         return Version(weather, date)
 
+    def to_dict(self) -> Dict[str, str]:
+        return {"weather": self.weather, "date": self.date}
+
 
 TVersion = Union[Version, EmptyVersion]
 
