@@ -1,9 +1,11 @@
-import unittest
-from unittest.mock import patch
-from datetime import datetime
 import json
+import unittest
+from datetime import datetime
+from unittest.mock import patch
+
 from weather.check import check
-from weather.models import Version
+from weather.models import EmptyVersion, Source, Version
+
 
 class TestCheck(unittest.TestCase):
 
@@ -13,34 +15,49 @@ class TestCheck(unittest.TestCase):
             "sunny",
             self.created_time
         )
+        self.tokyo = Source("tokyo, japan")
 
     def test_gets_data_from_request(self):
         with patch('requests.get') as mock_request:
             mock_request.return_value = self.response_sunny
 
-            version = check()[0]
+            version = check(self.tokyo)[0]
             self.assertEqual(version.weather, "sunny")
             self.assertEqual(version.date, self.created_time)
 
     def test_contacts_yahoo(self):
         with patch('requests.get') as mock_request:
-            check()
+            check(self.tokyo)
             url = mock_request.call_args[0]
-            self.assertIn("https://query.yahooapis.com/v1/public/yql?q=", url)
+            self.assertIn("https://query.yahooapis.com/v1/public/yql", url)
 
-    def test_produces_new_version_on_weather_change(self):
+    def test_checks_weather_for_city(self):
+        with patch('requests.get') as mock_request:
+            check(Source("paris, france"))
+            yql = 'select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text="paris, france")'
+            url = mock_request.call_args[0]
+            self.assertIn({'q': yql, 'format': 'json'}, url)
+
+    def test_new_version_on_weather_change(self):
         with patch('requests.get') as mock_request:
             mock_request.return_value = self.response_sunny
 
-            versions = check(previous_version=Version("cloudy", ""))
+            versions = check(self.tokyo, Version("cloudy", ""))
             self.assertGreaterEqual(len(versions), 1)
 
-    def test_no_new_version_on_same_weather(self):
+    def test_no_version_on_same_weather(self):
         with patch('requests.get') as mock_request:
             mock_request.return_value = self.response_sunny
 
-            versions = check(previous_version=Version("sunny", ""))
-            self.assertTrue( len(versions) == 0)
+            versions = check(self.tokyo, Version("sunny", ""))
+            self.assertEqual(len(versions), 0)
+
+    def test_new_version_when_previous_empty(self):
+        with patch('requests.get') as mock_request:
+            mock_request.return_value = self.response_sunny
+
+            versions = check(self.tokyo, EmptyVersion())
+            self.assertEqual(len(versions), 1)
 
 
 class FakeResponse:
@@ -53,9 +70,21 @@ class FakeResponse:
     @staticmethod
     def from_weather_and_date(weather: str, date: str = "") -> 'FakeResponse':
         return FakeResponse(
-            '{ "item": { "condition" : "%s" }, "created": "%s" }'
-            % (weather,
-               date or datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))
+            """{
+                "query":
+                {
+                    "created": "%s",
+                    "results": {
+                        "channel" : {
+                            "item": {
+                                "condition" : { "text": "%s" }
+                            }
+                        }
+                    }
+                }
+            }"""
+            % (date or datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+               weather)
         )
 
     def json(self):

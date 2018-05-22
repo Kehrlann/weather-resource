@@ -3,7 +3,7 @@ from typing import Union
 
 
 class EmptyVersion:
-    pass
+    weather: str = ""
 
 
 class Version:
@@ -23,6 +23,9 @@ class Version:
         weather = data.get('weather') or Version.weather
         date = data.get('date') or Version.date
         return Version(weather, date)
+
+
+TVersion = Union[Version, EmptyVersion]
 
 
 class Source:

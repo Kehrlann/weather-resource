@@ -15,10 +15,12 @@ class TestVersion(unittest.TestCase):
         version = Version.from_json("")
         self.assertIsInstance(version, EmptyVersion)
 
+
 class TestSource(unittest.TestCase):
     def test_loads_city(self):
         source = Source.from_json('{ "city": "Paris, France" }')
         self.assertEqual(source.city, "Paris, France")
+
 
 if __name__ == '__main__':
     unittest.main()
