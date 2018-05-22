@@ -1,5 +1,5 @@
 import json
-from typing import Union
+from typing import Union, Dict, Tuple
 
 
 class EmptyVersion:
@@ -15,11 +15,9 @@ class Version:
         self.date = date
 
     @staticmethod
-    def from_json(raw_data: str) -> Union['Version', EmptyVersion]:
-        if not raw_data:
+    def from_json(data: Dict[str, str]) -> 'TVersion':
+        if not data:
             return EmptyVersion()
-
-        data = json.loads(raw_data)
         weather = data.get('weather') or Version.weather
         date = data.get('date') or Version.date
         return Version(weather, date)
@@ -35,6 +33,12 @@ class Source:
         self.city = city
 
     @staticmethod
-    def from_json(raw_data: str) -> 'Source':
-        data = json.loads(raw_data)
+    def from_json(data: Dict[str, str]) -> 'Source':
         return Source(data.get('city') or Source.city)
+
+
+def load_source_version(raw_data: str) -> Tuple[Source, TVersion]:
+    parsed_input = json.loads(raw_data)
+    source_json = parsed_input.get("source")
+    version_json = parsed_input.get("version")
+    return Source.from_json(source_json), Version.from_json(version_json)
