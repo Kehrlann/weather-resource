@@ -1,17 +1,19 @@
-import os.path
 import json
+from pathlib import Path
+
 import weather.yahoo_weather as yahoo_weather
-from weather.models import Source, Version
+from weather.models import Version
 
 
-def run_in(source: Source, input_dir: str) -> None:
-    version = yahoo_weather.fetch(source)
+def run_in(version: Version, input_dir: str) -> None:
+    base_path = Path(input_dir)
+    base_path.mkdir(parents=True, exist_ok=True)
 
-    weather_file = os.path.join(input_dir, "weather.txt")
+    weather_file = base_path / "weather.txt"
     with open(weather_file, "w") as f:
         f.write(version.weather)
 
-    json_file = os.path.join(input_dir, "weather.json")
+    json_file = base_path / "weather.json"
     with open(json_file, "w") as f:
         json_data = json.dumps(version.to_dict())
         f.write(json_data)
