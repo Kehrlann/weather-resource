@@ -4,7 +4,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 import weather.yahoo_weather as yahoo_weather
-from weather.models import  Source, Version
+from weather.models import Source, Version
 
 
 class TestCheck(unittest.TestCase):
@@ -37,6 +37,7 @@ class TestCheck(unittest.TestCase):
             yql = 'select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text="paris, france")'
             url = mock_request.call_args[0]
             self.assertIn({'q': yql, 'format': 'json'}, url)
+
 
 class FakeResponse:
     status_code = 200

@@ -31,9 +31,18 @@ class TestCheck(unittest.TestCase):
     def test_no_version_on_same_weather(self):
         with patch('weather.yahoo_weather.fetch') as mock_fetch:
             mock_fetch.return_value = Version("sunny", self.created_time)
+            source = Source("tokyo, japan", True)
 
-            versions = run_check(self.source, Version("sunny", ""))
+            versions = run_check(source, Version("sunny", ""))
             self.assertEqual(len(versions), 0)
+
+    def test_new_version_on_same_weather(self):
+        with patch('weather.yahoo_weather.fetch') as mock_fetch:
+            mock_fetch.return_value = Version("sunny", self.created_time)
+
+            versions = run_check(self.source, Version(
+                "sunny", "1970-01-01T00:00:00Z"))
+            self.assertEqual(len(versions), 1)
 
     def test_new_version_when_previous_empty(self):
         with patch('weather.yahoo_weather.fetch') as mock_fetch:

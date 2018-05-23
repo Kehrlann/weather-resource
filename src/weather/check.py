@@ -11,8 +11,12 @@ from weather.models import (EmptyVersion, Source, TVersion, Version,
 def run_check(source: Source, previous_version: TVersion = EmptyVersion()) -> List[Version]:
     new_version = yahoo_weather.fetch(source)
 
-    if new_version.weather == previous_version.weather:
-        return []
+    if source.weather_change_only:
+        if new_version.weather == previous_version.weather:
+            return []
+    else:
+        if new_version.date == previous_version.date:
+            return []
 
     return [new_version]
 

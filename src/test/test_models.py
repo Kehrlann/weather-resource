@@ -19,14 +19,20 @@ class TestVersion(unittest.TestCase):
         version = Version("storm", "2018-05-21T16:26:37Z")
         self.assertEqual(
             version.to_dict(),
-            { "weather": "storm", "date": "2018-05-21T16:26:37Z" }
+            {"weather": "storm", "date": "2018-05-21T16:26:37Z"}
         )
 
 
 class TestSource(unittest.TestCase):
-    def test_loads_city(self):
-        source = Source.from_json({"city": "Paris, France"})
+    def test_loads_from_json(self):
+        source = Source.from_json(
+            {"city": "Paris, France", "weather_change_only": "true"})
         self.assertEqual(source.city, "Paris, France")
+        self.assertEqual(source.weather_change_only, True)
+
+    def test_weather_change_only_defaults_to_false(self):
+        source = Source.from_json({"city": "Paris, France"})
+        self.assertEqual(source.weather_change_only, False)
 
 
 class TestLoadingFromJson(unittest.TestCase):
