@@ -51,11 +51,13 @@ class FakeResponse:
             """{
                 "query":
                 {
-                    "created": "%s",
                     "results": {
                         "channel" : {
                             "item": {
-                                "condition" : { "text": "%s" }
+                                "condition" : {
+                                    "date": "%s",
+                                    "text": "%s"
+                                }
                             }
                         }
                     }

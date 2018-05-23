@@ -7,5 +7,6 @@ def fetch(source: Source) -> Version:
     response = requests.get(url, {'q': query, 'format': 'json'})
     data = response.json()['query']
     weather = data['results']['channel']['item']['condition']['text']
+    forecast_date = data['results']['channel']['item']['condition']['date']
 
-    return Version(weather, data['created'])
+    return Version(weather, forecast_date)
