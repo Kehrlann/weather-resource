@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from unittest.mock import patch
 
-from weather.check import run_check
+from weather.check_cmd import run_check
 from weather.models import EmptyVersion, Source, Version
 
 
