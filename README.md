@@ -11,9 +11,12 @@ This resource is powered by [Yahoo! Weather](https://developer.yahoo.com/weather
 
 * `city`: The city used for the weather forecast. Valid values will look
 like `Paris, France` or `boulder, co`. To check whether your city will be
-recognized by Yahoo, use their YQL API, and try the following request
-`select * from geo.places where text="YOUR CITY NAME"` in their 
-[online console](https://developer.yahoo.com/yql/).
+recognized by Yahoo, use their YQL API, and try the following request in 
+their [online console](https://developer.yahoo.com/yql/):
+
+```
+select * from geo.places where text="YOUR CITY NAME"
+```
 
 * `weather_change_only`: *Optional. Default `false`.* wether the resource
 should create new versions only when the weather changes, as opposed to
@@ -49,10 +52,6 @@ as well as the `date` of the forecast:
 ### `out`: Produce the current time.
 
 Just don't.
-
-#### Parameters
-
-*None.*
 
 
 ## Examples
