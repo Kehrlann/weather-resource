@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python -m weather.input $1 <&0
