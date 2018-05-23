@@ -27,7 +27,7 @@ when a new forecast is released.
 
 Returns current weather.
 
-### `in`: Report the given time.
+### `in`: Report the given weather.
 
 Fetches the current weather, writing the value in two separate files in
 the destination:
@@ -48,7 +48,7 @@ as well as the `date` of the forecast:
 *None.*
 
 
-### `out`: Produce the current time.
+### `out`: Produce the current weather.
 
 Just don't.
 
