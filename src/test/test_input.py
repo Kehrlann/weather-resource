@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from weather.in_cmd import run_in
+from weather.input import run_in
 from weather.models import Source, Version
 
 
