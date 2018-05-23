@@ -4,7 +4,8 @@ from datetime import datetime
 from typing import List, Union
 
 import weather.yahoo_weather as yahoo_weather
-from weather.models import EmptyVersion, Source, TVersion, Version, load_source_version
+from weather.models import (EmptyVersion, Source, TVersion, Version,
+                            load_source_version)
 
 
 def run_check(source: Source, previous_version: TVersion = EmptyVersion()) -> List[Version]:
@@ -16,8 +17,12 @@ def run_check(source: Source, previous_version: TVersion = EmptyVersion()) -> Li
     return [new_version]
 
 
+def output_versions(versions: List[Version]) -> None:
+    versions_dict = [v.to_dict() for v in versions]
+    print(json.dumps(versions_dict))
+
+
 if __name__ == "__main__":
     source, version = load_source_version(sys.stdin.read())
     new_versions = run_check(source, version)
-    versions_dict = [v.to_dict() for v in new_versions]
-    print(json.dumps(versions_dict))
+    output_versions(new_versions)

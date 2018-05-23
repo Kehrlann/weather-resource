@@ -1,11 +1,12 @@
 import json
+import sys
 from pathlib import Path
 
 import weather.yahoo_weather as yahoo_weather
-from weather.models import Version
+from weather.models import TVersion, load_source_version
 
 
-def run_in(version: Version, input_dir: str) -> None:
+def run_in(version: TVersion, input_dir: str) -> None:
     base_path = Path(input_dir)
     base_path.mkdir(parents=True, exist_ok=True)
 
@@ -19,5 +20,14 @@ def run_in(version: Version, input_dir: str) -> None:
         f.write(json_data)
 
 
+def output_version(version: TVersion) -> None:
+    json_version = json.dumps({"version": version.to_dict()})
+    print(json_version)
+
+
 if __name__ == "__main__":
-    pass
+    input_dir = sys.argv[1]
+    source, version = load_source_version(sys.stdin.read())
+    run_in(version, input_dir)
+
+    output_version(version)

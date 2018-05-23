@@ -1,8 +1,10 @@
+import sys
 import unittest
 from datetime import datetime
+from io import StringIO
 from unittest.mock import patch
 
-from weather.check import run_check
+from weather.check import output_versions, run_check
 from weather.models import EmptyVersion, Source, Version
 
 
@@ -39,6 +41,21 @@ class TestCheck(unittest.TestCase):
 
             versions = run_check(self.source, EmptyVersion())
             self.assertEqual(len(versions), 1)
+
+
+class TestPrintVersions(unittest.TestCase):
+    def setUp(self):
+        self.stdout = StringIO()
+        sys.stdout = self.stdout
+
+    def tearDown(self):
+        sys.stdout = sys.__stdout__
+
+    def test_outputs_versions(self):
+        output_versions([Version("a", "one"), Version("b", "two")])
+        captured_output = self.stdout.getvalue().strip()
+        self.assertEqual(
+            captured_output, '[{"weather": "a", "date": "one"}, {"weather": "b", "date": "two"}]')
 
 
 if __name__ == '__main__':

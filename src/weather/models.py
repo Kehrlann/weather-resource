@@ -1,9 +1,12 @@
 import json
-from typing import Union, Dict, Tuple
+from typing import Dict, Tuple, Union
 
 
 class EmptyVersion:
     weather: str = ""
+
+    def to_dict(self) -> Dict[str, str]:
+        return {}
 
 
 class Version:
