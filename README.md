@@ -53,9 +53,7 @@ as well as the `date` of the forecast:
 Just don't.
 
 
-## Examples
-
-### Periodic trigger
+## Example
 
 ```yaml
 resource_types:
