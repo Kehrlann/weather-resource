@@ -12,6 +12,13 @@ class TestCheck(unittest.TestCase):
         self.created_time = '2018-05-21T16:26:37Z'
         self.source = Source("tokyo, japan")
 
+    def test_fetches_from_yahoo_weather(self):
+        with patch('weather.yahoo_weather.fetch') as mock_fetch:
+            mock_fetch.return_value = Version("sunny", self.created_time)
+            run_check(self.source, EmptyVersion())
+
+            mock_fetch.assert_called_once_with(self.source)
+
     def test_new_version_on_weather_change(self):
         with patch('weather.yahoo_weather.fetch') as mock_fetch:
             mock_fetch.return_value = Version("sunny", self.created_time)
