@@ -1,5 +1,5 @@
 # Weather Resource
-<a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/purple.png" width="134" height="29"/> </a> [![Build Status](https://travis-ci.org/Kehrlann/weather-resource.svg?branch=master)](https://travis-ci.org/Kehrlann/weather-resource)
+[![Powered by Yahoo](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)[![Build Status](https://travis-ci.org/Kehrlann/weather-resource.svg?branch=master)](https://travis-ci.org/Kehrlann/weather-resource)
 
 Implements a resource that reports when the weather changes. The resource
 can detect new forecasts, or just when the current weather has changed.
