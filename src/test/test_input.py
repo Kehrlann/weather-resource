@@ -38,6 +38,24 @@ class TestIn(unittest.TestCase):
 
             self.assertEqual(file_content, "lovely weather")
 
+    def test_creates_json_file(self):
+        with patch('weather.yahoo_weather.fetch') as mock_fetch:
+            mock_fetch.return_value = Version(
+                "lovely weather", self.created_time)
+            run_in(self.source, self.input_dir)
+
+            json_file = os.path.join(self.input_dir, "weather.json")
+            self.assertTrue(os.path.isfile(json_file))
+
+            file_content = None
+            with open(json_file, "r") as f:
+                file_content = f.read()
+
+            self.assertEqual(
+                file_content,
+                '{"weather": "lovely weather", "date": "2018-05-21T16:26:37Z"}'
+            )
+
 
 if __name__ == '__main__':
     unittest.main()
